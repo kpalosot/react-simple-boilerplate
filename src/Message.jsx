@@ -1,15 +1,18 @@
 import React, {Component} from 'react';
 
 export default function Message(props) {
-  let classType = 'message';
+  // Setting class type if message is an incomingNotification
+  // let classType = 'message';
+  // const message = props.message;
+  // if(message.type === 'incomingNotification'){
+  //   classType += ' system';
+  // }
   const message = props.message;
-  if(message.type === 'incomingNotification'){
-    classType += ' system';
-  }
+  const classType = (message.type === 'incomingNotification') ?
+    'message system' : 'message';
 
   const username = message.username ?
-    (<span className="message-username">{message.username}</span>) :
-    null;
+    (<span className="message-username">{message.username}</span>) : null;
 
   return (
     <main className={classType}>

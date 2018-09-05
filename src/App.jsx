@@ -4,10 +4,11 @@ import ChatBar from './ChatBar.jsx';
 
 const socketURL = 'ws://0.0.0.0:3001';
 
-function NavBar(){
+const NavBar = ({numberOfUsers}) => {
   return (
   <nav className="navbar">
     <a href="/" className="navbar-brand">Chatty</a>
+    <span className="navbar-users">{numberOfUsers}</span>
   </nav>);
 }
 
@@ -15,57 +16,61 @@ class App extends Component {
   constructor(props){
     super(props)
     this.state = {
-      messages: [], //messages
-      currentUser: {name: 'Anonymous'}
+      messages: [],
+      currentUser: {name: 'Anonymous'},
+      numberOfUsers: 1
     }
   }
 
   componentDidMount() {
     this.socket = new WebSocket(socketURL);
     this.socket.onopen = (event) => {
-      console.log('Connected to server.')
+      console.log('Connected to server');
     }
+    this.socket.onmessage = this.receiveDataFromServer;
   }
 
-  sendToServer(newMessage, username){
-    this.socket.send(JSON.stringify(newMessage));
-    this.socket.onmessage = (e) => {
+  receiveDataFromServer = (e) => {
+    console.log(this.state);
+    const serverMessage = JSON.parse(e.data);
+    if(serverMessage.type === 'incomingUser'){
+      this.setState({
+        numberOfUsers: serverMessage.content
+      })
+    } else {
       const allOldMessages = this.state.messages;
-      const serverMessage = JSON.parse(e.data);
       const allNewMessages = [...allOldMessages, serverMessage];
       let updateObject = {
         messages: allNewMessages
       };
-      if (username){
-        updateObject.currentUser = {name: username};
-      }
+
       this.setState(updateObject);
     }
   }
 
-  _addIncomingMessage = message => {
-    const username = this.state.currentUser.name;
-    const newMessage = {
+  _addIncomingMessage = (message, username) => {
+    const thisUsername = username ? username : this.state.currentUser.name;
+    let newMessage = {
       content: message,
-      type: 'incomingMessage',
-      username
+      oldUsername: this.state.currentUser.name,
+      newUsername: thisUsername
     };
-    this.sendToServer(newMessage);
-  }
-
-  _updateUsername = username => {
-    const newContent = `${this.state.currentUser.name} has changed their username to ${username}`;
-    const newMessage = {
-      content: newContent,
-      type: 'incomingNotification'
-    };
-    this.sendToServer(newMessage, username);
+    if (thisUsername === this.state.currentUser.name){
+      newMessage.type = 'postMessage';
+    } else {
+      newMessage.type = 'postNotification';
+      this.setState({
+        currentUser: { name: thisUsername }
+      });
+    }
+    this.socket.send(JSON.stringify(newMessage));
   }
 
   render() {
+    const userCount = `${this.state.numberOfUsers} user${(this.state.numberOfUsers > 1) ? 's' : ''} online`
     return (
       <div>
-        <NavBar />
+        <NavBar numberOfUsers={userCount}/>
         <MessageList messages={this.state.messages}/>
         <ChatBar
           currentUser={this.state.currentUser.name}

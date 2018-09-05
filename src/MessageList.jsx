@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import Message from './Message.jsx';
 
+// Loading component
 function Loading(){
   return (
     <h1>Loading messages...</h1>
@@ -14,13 +15,14 @@ export default class MessageList extends Component{
       loading: true
     };
   }
-
+  // Set loading state to false after mounting.
   componentDidMount(){
     this.setState({
       loading: false
     })
   }
 
+  // Rendering MessageList container
   render(){
     const messageItems = this.state.loading ? <Loading /> :
       this.props.messages.map((thisMessage) => {
