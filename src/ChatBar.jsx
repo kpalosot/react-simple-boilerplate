@@ -1,5 +1,36 @@
 import React, {Component} from 'react';
 
+const InputArea = props => {
+  let inputAreaSettings = {
+    onKeyDown: props.keyPressHandler
+  };
+  if(props.currentUser){
+    inputAreaSettings.className = 'chatbar-username';
+    inputAreaSettings.name = 'username';
+    inputAreaSettings.placeholder = 'Your username (optional)';
+    inputAreaSettings.defaultValue=props.currentUser;
+  } else {
+    inputAreaSettings.className = 'chatbar-message';
+    inputAreaSettings.name = 'content';
+    inputAreaSettings.placeholder = 'Type a message and hit ENTER';
+  }
+
+  return <input {...inputAreaSettings}/>;
+
+}
+
+const FooterBar = ({currentUser, keyPressHandler}) => {
+  return (
+    <div className="chatbar">
+      <InputArea
+        currentUser={currentUser}
+        keyPressHandler={keyPressHandler}/>
+      <InputArea
+        keyPressHandler={keyPressHandler}/>
+    </div>
+  );
+}
+
 export default class ChatBar extends Component {
   _handleKeyPress = (e) => {
       if (e.keyCode === 13) {
@@ -15,18 +46,7 @@ export default class ChatBar extends Component {
   render(){
     const username = this.props.currentUser ? this.props.currentUser : "Anonymous2.0";
     return (
-    <footer className="chatbar">
-      <input
-        className="chatbar-username"
-        name="username"
-        placeholder="Your username (optional)"
-        defaultValue={username}
-        onKeyDown={this._handleKeyPress}/>
-      <input
-        className="chatbar-message"
-        name="content"
-        placeholder="Type a message and hit ENTER"
-        onKeyDown={this._handleKeyPress}/>
-    </footer>);
+      <FooterBar currentUser={username} keyPressHandler={this._handleKeyPress}/>
+    );
   }
 }

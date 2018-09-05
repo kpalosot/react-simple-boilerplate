@@ -23,8 +23,8 @@ export default class MessageList extends Component{
 
   render(){
     const messageItems = this.state.loading ? <Loading /> :
-      this.props.messages.map((thisMessage, index) => {
-        return <Message key={index} message={thisMessage}/>
+      this.props.messages.map((thisMessage) => {
+        return <Message key={thisMessage.id} message={thisMessage}/>
       });
     return (
       <div className="messages">
