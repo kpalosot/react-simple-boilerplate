@@ -7,7 +7,7 @@ export default function Message(props) {
     'message system' : 'message';
 
   const username = message.username ?
-    (<span className="message-username">{message.username}</span>) : null;
+    (<span className="message-username" style={{color: message.color}}>{message.username}</span>) : null;
 
   return (
     <main className={classType}>

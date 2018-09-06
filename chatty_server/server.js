@@ -17,6 +17,12 @@ const server = express()
 // Create the WebSockets server
 const wss = new SocketServer({ server });
 
+const getColor = () => {
+  const colors = ['#ff0000', '#0000ff', '#00ff00', '#000000'];
+  let index = (wss.clients.size > 3) ? (wss.clients.size % 3) : wss.clients.size;
+  return colors[index];
+}
+
 // Set up a callback that will run when a client connects to the server
 // When a client connects they are assigned a socket, represented by
 // the ws parameter in the callback.
@@ -33,6 +39,9 @@ wss.on('connection', (ws) => {
 
   // Placeholder for username of connected user
   ws.username = 'Anonymous';
+  ws.color = getColor();
+  console.log(ws.color);
+
 
   ws.on('message', function incoming(data){
     const message = JSON.parse(data);
@@ -57,11 +66,11 @@ wss.on('connection', (ws) => {
         id: uuid(),
         type: 'incomingMessage',
         content: message.content,
-        username: message.newUsername
+        username: message.newUsername,
+        color: ws.color
       };
       sendMessage(newMessageObj);
     }
-
   });
 
   // Sends the new user count to all clients whenever a new user enters the chat
