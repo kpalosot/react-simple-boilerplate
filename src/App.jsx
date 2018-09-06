@@ -4,6 +4,7 @@ import ChatBar from './ChatBar.jsx';
 
 const socketURL = 'ws://0.0.0.0:3001';
 
+// Render function for NavBar
 const NavBar = ({numberOfUsers}) => {
   return (
   <nav className="navbar">
@@ -22,15 +23,18 @@ class App extends Component {
     }
   }
 
+  // Initializes socket
   componentDidMount() {
     this.socket = new WebSocket(socketURL);
     this.socket.onopen = (event) => {
       console.log('Connected to server');
     }
-    this.socket.onmessage = this.receiveDataFromServer;
+    this.socket.onmessage = this._receiveDataFromServer;
   }
 
-  receiveDataFromServer = (e) => {
+  // Callback function for this.socket.onmesage
+  // Sets the state of either the number of users or messages
+  _receiveDataFromServer = (e) => {
     console.log(this.state);
     const serverMessage = JSON.parse(e.data);
     if(serverMessage.type === 'incomingUser'){
@@ -48,6 +52,8 @@ class App extends Component {
     }
   }
 
+  // Creates the message object coming from our user
+  // and sends the object to server
   _addIncomingMessage = (message, username) => {
     const thisUsername = username ? username : this.state.currentUser.name;
     let newMessage = {
@@ -55,6 +61,7 @@ class App extends Component {
       oldUsername: this.state.currentUser.name,
       newUsername: thisUsername
     };
+
     if (thisUsername === this.state.currentUser.name){
       newMessage.type = 'postMessage';
     } else {

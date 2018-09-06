@@ -23,22 +23,26 @@ const wss = new SocketServer({ server });
 wss.on('connection', (ws) => {
   console.log('Client connected');
 
+  // Create a message to everyone in chate that a new user has entered the chatroom
   const announceNewUser = {
     id: uuid(),
     content: 'New user entered the chatroom.',
     type: 'incomingNotification'
   };
-
-  ws.username = 'Anonymous';
-
   sendMessage(announceNewUser);
+
+  // Placeholder for username of connected user
+  ws.username = 'Anonymous';
 
   ws.on('message', function incoming(data){
     const message = JSON.parse(data);
+
+    // Sets the username to the newUsername
     ws.username = message.newUsername;
 
+    // Checks if the user has changed their username
+    // Sends a notification to all clients if true
     if(message.oldUsername !== message.newUsername){
-      console.log('doing first send');
       const newMessageObj = {
         id: uuid(),
         type: 'incomingNotification',
@@ -47,6 +51,7 @@ wss.on('connection', (ws) => {
       sendMessage(newMessageObj);
     }
 
+    // Sends a message to all clients if there is a message passed bu the client
     if(message.content){
       const newMessageObj = {
         id: uuid(),
@@ -59,11 +64,13 @@ wss.on('connection', (ws) => {
 
   });
 
+  // Sends the new user count to all clients whenever a new user enters the chat
   sendUserCount();
 
   // Set up a callback for when a client closes the socket. This usually means they closed their browser.
   ws.on('close', () => {
-    console.log('Client disconnected')
+    console.log('Client disconnected');
+    // Updates all users to
     sendUserCount();
     const newMessageObj = {
       type: 'incomingNotification',

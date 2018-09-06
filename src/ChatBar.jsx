@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 
+// Render function for input
 const InputArea = props => {
   let inputAreaSettings = {
     onKeyPress: props.keyPressHandler,
@@ -20,6 +21,7 @@ const InputArea = props => {
 
 }
 
+// Render function for FooterBar
 const FooterBar = ({currentUser, keyPressHandler, onChangeHandler}) => {
   return (
     <div className="chatbar">
@@ -47,13 +49,20 @@ export default class ChatBar extends Component {
     if (e.key === 'Enter') {
       const conditionUser = this.state.username.length > 0;
       const conditionText = this.state.inputTextValue.length > 0;
+
+      // Checks if the username and text from user are valid (not empty string)
       if(conditionUser && conditionText){
+        // username and input text are valid
         this.props.addMessage(this.state.inputTextValue, this.state.username);
       } else if(conditionUser && !(conditionText)){
+        // input text is empty string but username is not
         this.props.addMessage(null, this.state.username);
       } else if(!(conditionUser) && conditionText){
+        // input text is not empty but username is
         this.props.addMessage(this.state.inputTextValue, null);
       }
+
+      // resets the text box and the text state to an empty string
       if(e.target.name === 'content'){
         e.target.value = '';
         this.setState({
@@ -63,6 +72,7 @@ export default class ChatBar extends Component {
     }
   }
 
+    // Updates the states on change in the input text boxes
   _onTextChange = (e) => {
     if(e.target.name === 'content'){
       this.setState({
@@ -76,7 +86,6 @@ export default class ChatBar extends Component {
   }
 
   render(){
-    // const username = this.props.currentUser ? this.props.currentUser : "Anonymous2.0";
     return (
       <FooterBar currentUser={this.props.currentUser} keyPressHandler={this._handleKeyPress} onChangeHandler={this._onTextChange}/>
     );
