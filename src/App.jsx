@@ -37,7 +37,6 @@ class App extends Component {
   _receiveDataFromServer = (e) => {
     console.log(this.state);
     const serverMessage = JSON.parse(e.data);
-    console.log(serverMessage);
     if(serverMessage.type === 'incomingUser'){
       this.setState({
         numberOfUsers: serverMessage.content

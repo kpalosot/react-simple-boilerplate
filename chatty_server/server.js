@@ -35,12 +35,11 @@ wss.on('connection', (ws) => {
     content: 'New user entered the chatroom.',
     type: 'incomingNotification'
   };
-  sendMessage(announceNewUser);
+  sendNewUserMessage(announceNewUser, ws);
 
   // Placeholder for username of connected user
   ws.username = 'Anonymous';
   ws.color = getColor();
-  console.log(ws.color);
 
 
   ws.on('message', function incoming(data){
@@ -62,10 +61,31 @@ wss.on('connection', (ws) => {
 
     // Sends a message to all clients if there is a message passed bu the client
     if(message.content){
+      var regexString = /https?:.+\.(jpg|png|gif)/;
+      const matches = message.content.match(regexString);
+      let newMessage;
+      if(matches){
+        const textMessage = message.content.replace(regexString, '');
+        if(textMessage){
+          newMessage = `
+            <div>
+              <div>${textMessage}</div>
+              <img src=${matches[0]} alt="Image not found" class="message-img"/>
+            </div>`
+        } else {
+          newMessage = `
+            <div>
+              <img src=${matches[0]} alt="Image not found" class="message-img"/>
+            </div>`
+        }
+      } else {
+        // newMessage = message.content;
+        newMessage = `<div>${message.content}</div>`
+      }
       const newMessageObj = {
         id: uuid(),
         type: 'incomingMessage',
-        content: message.content,
+        content: newMessage,
         username: message.newUsername,
         color: ws.color
       };
@@ -106,6 +126,14 @@ function sendUserCount(){
 function sendMessage(message){
   wss.clients.forEach(function each(client) {
     if (client.readyState === WebSocket.OPEN) {
+      client.send(JSON.stringify(message));
+    }
+  });
+}
+
+function sendNewUserMessage(message, ws) {
+  wss.clients.forEach(function each(client) {
+    if (client !== ws && client.readyState === WebSocket.OPEN) {
       client.send(JSON.stringify(message));
     }
   });

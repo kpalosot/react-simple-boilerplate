@@ -12,7 +12,9 @@ export default function Message(props) {
   return (
     <main className={classType}>
       {username}
-      <span className="message-content">{message.content}</span>
+      <span className="message-content" dangerouslySetInnerHTML={{
+        __html: message.content
+      }}/>
     </main>
   );
 }
