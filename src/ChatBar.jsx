@@ -24,13 +24,11 @@ const InputArea = props => {
 // Render function for FooterBar
 const FooterBar = ({currentUser, keyPressHandler, onChangeHandler}) => {
   return (
-    <div className="chatbar">
+    <div className="chatbar" onKeyPress={keyPressHandler}>
       <InputArea
         currentUser={currentUser}
-        keyPressHandler={keyPressHandler}
         onChangeHandler={onChangeHandler}/>
       <InputArea
-        keyPressHandler={keyPressHandler}
         onChangeHandler={onChangeHandler}/>
     </div>
   );
