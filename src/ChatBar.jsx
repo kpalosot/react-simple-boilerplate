@@ -1,23 +1,28 @@
 import React, {Component} from 'react';
 
 // Render function for input
-const InputArea = props => {
+const InputAreaText = props => {
   let inputAreaSettings = {
-    onKeyPress: props.keyPressHandler,
-    onChange: props.onChangeHandler
+    onChange: props.onChangeHandler,
+    className: 'chatbar-message',
+    name: 'content',
+    placeholder: 'Type a message and hit ENTER'
   };
-  if(props.currentUser){
-    inputAreaSettings.className = 'chatbar-username';
-    inputAreaSettings.name = 'username';
-    inputAreaSettings.placeholder = 'Your username (optional)';
-    inputAreaSettings.defaultValue=props.currentUser;
-  } else {
-    inputAreaSettings.className = 'chatbar-message';
-    inputAreaSettings.name = 'content';
-    inputAreaSettings.placeholder = 'Type a message and hit ENTER';
-  }
 
   return <input {...inputAreaSettings}/>;
+
+}
+
+const InputAreaUserName = props => {
+  let inputAreaSettings = {
+    onChange: props.onChangeHandler,
+    className: 'chatbar-username',
+    name: 'username',
+    placeholder: 'Your username (optional)',
+    defaultValue: props.currentUser
+  };
+
+  return <input {...inputAreaSettings} />;
 
 }
 
@@ -25,10 +30,10 @@ const InputArea = props => {
 const FooterBar = ({currentUser, keyPressHandler, onChangeHandler}) => {
   return (
     <div className="chatbar" onKeyPress={keyPressHandler}>
-      <InputArea
+      <InputAreaUserName
         currentUser={currentUser}
         onChangeHandler={onChangeHandler}/>
-      <InputArea
+      <InputAreaText
         onChangeHandler={onChangeHandler}/>
     </div>
   );
@@ -52,12 +57,13 @@ export default class ChatBar extends Component {
       const newText = this.state.inputTextValue.length > 0 ? this.state.inputTextValue : null;
       this.props.addMessage(newText, newUser);
 
+
       // resets the text box and the text state to an empty string
       if(e.target.name === 'content'){
         e.target.value = '';
         this.setState({
           inputTextValue: ''
-        })
+        });
       }
     }
   }
@@ -77,7 +83,7 @@ export default class ChatBar extends Component {
 
   render(){
     return (
-      <FooterBar currentUser={this.props.currentUser} keyPressHandler={this._handleKeyPress} onChangeHandler={this._onTextChange}/>
+      <FooterBar currentUser={this.state.username} keyPressHandler={this._handleKeyPress} onChangeHandler={this._onTextChange}/>
     );
   }
 }

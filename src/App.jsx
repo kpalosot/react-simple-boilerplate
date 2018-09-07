@@ -35,7 +35,6 @@ class App extends Component {
   // Callback function for this.socket.onmesage
   // Sets the state of either the number of users or messages
   _receiveDataFromServer = (e) => {
-    console.log(this.state);
     const serverMessage = JSON.parse(e.data);
     if(serverMessage.type === 'incomingUser'){
       this.setState({
