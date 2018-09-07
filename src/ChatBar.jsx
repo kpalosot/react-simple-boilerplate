@@ -47,20 +47,12 @@ export default class ChatBar extends Component {
   // Handles event when user presses 'ENTER'
   _handleKeyPress = (e) => {
     if (e.key === 'Enter') {
-      const conditionUser = this.state.username.length > 0;
-      const conditionText = this.state.inputTextValue.length > 0;
-
-      // Checks if the username and text from user are valid (not empty string)
-      if(conditionUser && conditionText){
-        // username and input text are valid
-        this.props.addMessage(this.state.inputTextValue, this.state.username);
-      } else if(conditionUser && !(conditionText)){
-        // input text is empty string but username is not
-        this.props.addMessage(null, this.state.username);
-      } else if(!(conditionUser) && conditionText){
-        // input text is not empty but username is
-        this.props.addMessage(this.state.inputTextValue, null);
-      }
+      // Make sure that the current states have actual value to be sent
+      // Prohibits user to send an empty string as their username
+      // Prohibits user to send an empty string as message
+      const newUser = this.state.username.length > 0 ? this.state.username : null;
+      const newText = this.state.inputTextValue.length > 0 ? this.state.inputTextValue : null;
+      this.props.addMessage(newText, newUser);
 
       // resets the text box and the text state to an empty string
       if(e.target.name === 'content'){
