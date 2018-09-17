@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 
 // Render function for a message
-export default function Message(props) {
-  const message = props.message;
+export default function Message({ message }) {
+  // const message = props.message;
   const classType = (message.type === 'incomingNotification') ?
     'message system' : 'message';
 
