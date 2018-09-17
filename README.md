@@ -1,40 +1,31 @@
-React Boilerplate
+Chatty App (React UI with Websocket Server)
 =====================
 
-A minimal and light dev environment for ReactJS.
+Final Product
+!["Chat Room"](https://github.com/kpalosot/react-simple-boilerplate/blob/master/docs/Chatty_App.png?raw=true)
+
+Features:
+* Multiple users can connect to the chat room.
+* Users can choose their own username.
+* Users are assigned colours to their names.
+* Users can see whenever a new user enters the chat room.
+* Users can see whenever a user leaves the chat room.
+* Users can see how many users are in the room.
 
 ### Usage
 
-Clone the boilerplate and create your own git repo.
-
+Under chatty_server directory, install dependencies and start the websocket server.
 ```
-git clone git@github.com:lighthouse-labs/react-simple-boilerplate.git
-cd react-simple-boilerplate
-git remote rm origin
-git remote add origin [YOUR NEW REPOSITORY]
-# Manually update your package.json file
+npm install
+npm start
 ```
 
-Install the dependencies and start the server.
+Install the dependencies and start server in the root directory.
 
 ```
 npm install
 npm start
 open http://localhost:3000
-```
-
-### Static Files
-
-You can store static files like images, fonts, etc in the `build` folder.
-
-For example, if you copy a file called my_image.png into the build folder you can access it using `http://localhost:3000/build/my_image.png`.
-
-### Linting
-
-This boilerplate project includes React ESLint configuration.
-
-```
-npm run lint
 ```
 
 ### Dependencies
@@ -43,3 +34,5 @@ npm run lint
 * Webpack
 * [babel-loader](https://github.com/babel/babel-loader)
 * [webpack-dev-server](https://github.com/webpack/webpack-dev-server)
+* Express
+* uuid
