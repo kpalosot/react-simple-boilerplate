@@ -1,7 +1,7 @@
 Chatty App (React UI with Websocket Server)
 =====================
 
-Final Product
+### Final Product
 !["Chat Room"](https://github.com/kpalosot/react-simple-boilerplate/blob/master/docs/Chatty_App.png?raw=true)
 
 Features:
